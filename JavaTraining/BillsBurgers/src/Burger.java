@@ -1,111 +1,54 @@
 public class Burger {
 
-    protected String name;
-    protected double burgerPrice;
-    protected String breadType;
-    protected boolean meat;
-    protected boolean lettuce;
-    protected double lettucePrice = 0.60;
-    protected boolean cheese;
-    protected double cheesePrice = 1;
-    protected boolean onions;
-    protected double onionsPrice = 0.60;
-    protected boolean tomato;
-    protected double tomatoPrice = 0.75;
+    protected BurgerComponent[] baseComponents;
+    protected BurgerComponent[] additionalComponents;
 
-    public Burger(String name, String breadType, double burgerPrice) {
-        this.name = name;
-        this.breadType = breadType;
-        this.burgerPrice = burgerPrice;
-        this.meat = true;
+    protected double basePrice;
+
+    public Burger() {
+        this.basePrice = 5;
+        this.baseComponents = new BurgerComponent[]{
+                new BurgerComponent("bread"),
+                new BurgerComponent("meat")};
+        this.additionalComponents = new BurgerComponent[]{};
     }
 
-    public Burger(String name, int burgerPrice) {
-        this.name = name;
-        this.burgerPrice = burgerPrice;
-        this.meat = true;
+    public Burger(BurgerComponent[] additionalComponents) {
 
-    }
-    public void setLettuce(boolean lettuce) {
-        this.lettuce = lettuce;
-    }
-
-    public void setCheese(boolean cheese) {
-        this.cheese = cheese;
+        this.additionalComponents = additionalComponents;
+        this.basePrice = 5;
+        this.baseComponents = new BurgerComponent[]{
+                new BurgerComponent("bread"),
+                new BurgerComponent("meat")};
     }
 
-    public void setOnions(boolean onions) {
-        this.onions = onions;
+    public double getBasePrice() {
+        return basePrice;
     }
 
-    public void setTomato(boolean tomato) {
-        this.tomato = tomato;
+    public double additionalComponentsPrice() {
 
-    }
+        double totalPrice = 0;
 
-    public String getBreadType() {
-        return breadType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int totalAdditions() {
-
-        int totalAdditions = 0;
-
-        totalAdditions += tomato ? 1 : 0;
-        totalAdditions += lettuce ? 1 : 0;
-        totalAdditions += cheese ? 1 : 0;
-        totalAdditions += onions ? 1 : 0;
-
-        return totalAdditions;
-    }
-
-    public double totalPrice() {
-
-        double totalPrice = burgerPrice;
-
-        totalPrice += tomato ? tomatoPrice : 0;
-        totalPrice += lettuce ? lettucePrice : 0;
-        totalPrice += cheese ? cheesePrice : 0;
-        totalPrice += onions ? onionsPrice : 0;
-
+        for (int i = 0; i < additionalComponents.length; i++) {
+            totalPrice = totalPrice + additionalComponents[i].price();
+        }
         return totalPrice;
-
     }
 
-    public void receiptBreakDown() {
+    public int additionalComponents() {
 
-        System.out.println("Burger base price: " + burgerPrice);
+        int totalAdditionalComponents = 0;
 
-        if(tomato) {
-            System.out.println("Tomato price: " + tomatoPrice);
-        }
-        if(lettuce){
-            System.out.println("Lettuce price: " + lettucePrice);
-        }
-        if(cheese) {
-            System.out.println("Cheese price: " + cheesePrice);
-        }
-        if(onions) {
-            System.out.println("Onions price: " + onionsPrice);
+        for(int i = 0; i < additionalComponents.length; i++) {
+            totalAdditionalComponents++;
         }
 
+        if(totalAdditionalComponents <= 4) {
+            return  totalAdditionalComponents;
+        } else {
+            System.out.println("Maximum 4 add-ons");
+            return  -1;
+        }
     }
-
-
-    public void receiptTotals() {
-
-        System.out.println("Total additions: " + totalAdditions());
-        System.out.println("Total price: " + totalPrice());
-
-    }
-
-    public void receipt() {
-        receiptBreakDown();
-        receiptTotals();
-    }
-
 }
