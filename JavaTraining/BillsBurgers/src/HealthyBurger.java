@@ -1,28 +1,58 @@
 public class HealthyBurger extends Burger {
 
-    public HealthyBurger(BurgerComponent[] additionalComponents) {
-        super(additionalComponents);
-        basePrice = 6;
-        this.additionalComponents = additionalComponents;
-        this.baseComponents = new BurgerComponent[]{
-                new BurgerComponent("wholemeal bread"),
-                new BurgerComponent("meat")};
+    boolean peppers;
+    boolean carrots;
+    double peppersPrice = 0.50;
+    double carrotsPrice = 0.50;
+
+    public HealthyBurger(String name, int burgerPrice) {
+        super(name, burgerPrice);
+        this.breadType = "brown roll";
+    }
+
+    public void setPeppers(boolean peppers) {
+        this.peppers = peppers;
+
+    }
+
+    public void setCarrots(boolean carrots) {
+        this.carrots = carrots;
+
     }
 
     @Override
-    public int additionalComponents() {
+    public int totalAdditions() {
 
-        int totalAdditionalComponents = 0;
+        int totalAdditions = super.totalAdditions();
+        totalAdditions += peppers ? 1 : 0;
+        totalAdditions += carrots ? 1 : 0;
 
-        for(int i = 0; i < additionalComponents.length; i++) {
-            totalAdditionalComponents++;
+        return totalAdditions;
+
+    }
+
+    @Override
+    public double totalPrice() {
+
+        double totalPrice = super.totalPrice();
+        totalPrice += peppers ? peppersPrice : 0;
+        totalPrice += carrots ? carrotsPrice : 0;
+
+        return totalPrice;
+    }
+
+    @Override
+    public void receiptBreakDown() {
+
+        super.receiptBreakDown();
+
+        if(peppers) {
+            System.out.println("Peppers price: " + peppersPrice);
+        }
+        if(carrots){
+            System.out.println("Carrots price: " + carrotsPrice);
         }
 
-        if(totalAdditionalComponents <= 6) {
-            return  totalAdditionalComponents;
-        } else {
-            System.out.println("Maximum 6 add-ons");
-            return  -1;
-        }
     }
 }
+
