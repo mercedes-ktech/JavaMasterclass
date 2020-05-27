@@ -4,16 +4,16 @@ import java.util.Map;
 
 public class ReservedItemsList {
 
-    private final Map<String, StockItem> reservedList;
+    private final Map<String, Item> reservedList;
 
     public ReservedItemsList() {
         this.reservedList = new LinkedHashMap<>();
     }
 
-    public int addItemToReservedList(StockItem item) {
+    public int addItemToReservedList(Item item) {
         if((item != null) && (item.quantityReserved() <= item.quantityInStock())) {
             // check if already have quantities of this item
-            StockItem reserved = reservedList.getOrDefault(item.getName(), item);
+            Item reserved = reservedList.getOrDefault(item.getName(), item);
             // If there are already stocks on this item, adjust the quantity
             if(reserved != item) {
                 item.adjustReservedStock(reserved.quantityReserved());
@@ -26,7 +26,7 @@ public class ReservedItemsList {
     }
 
     public int removeItemsFromReservedList(String item, int quantity) {
-        StockItem reserved = reservedList.getOrDefault(item, null);
+        Item reserved = reservedList.getOrDefault(item, null);
 
         if((reserved != null) && (reserved.quantityReserved() >= quantity) && (quantity >0)) {
             reserved.adjustReservedStock(-quantity);
@@ -35,19 +35,19 @@ public class ReservedItemsList {
         return 0;
     }
 
-    public StockItem get(String key) {
+    public Item get(String key) {
         return reservedList.get(key);
     }
 
     public Map<String, Double> priceList() {
         Map<String, Double> prices = new LinkedHashMap<>();
-        for(Map.Entry<String, StockItem> item : reservedList.entrySet()) {
+        for(Map.Entry<String, Item> item : reservedList.entrySet()) {
             prices.put(item.getKey(), item.getValue().getPrice());
         }
         return Collections.unmodifiableMap(prices);
     }
 
-    public Map<String, StockItem> items() {
+    public Map<String, Item> items() {
         return Collections.unmodifiableMap(reservedList);
     }
 
@@ -55,8 +55,8 @@ public class ReservedItemsList {
     public String toString() {
         String s = "\nReserved List\n";
         double totalCost = 0.0;
-        for (Map.Entry<String, StockItem> item : reservedList.entrySet()) {
-            StockItem reserved = item.getValue();
+        for (Map.Entry<String, Item> item : reservedList.entrySet()) {
+            Item reserved = item.getValue();
 
             double itemValue = reserved.getPrice() * reserved.quantityReserved();
 

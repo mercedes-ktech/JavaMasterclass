@@ -1,17 +1,17 @@
-public class StockItem implements Comparable<StockItem> {
+public class Item implements Comparable<Item> {
     private final String name;
     private double price;
     private int quantityStock;
     private int reservedStock;
 
-    public StockItem(String name, double price) {
+    public Item(String name, double price) {
         this.name = name;
         this.price = price;
-        this.quantityStock = 0;  // or here (but you wouldn't normally do both).
+        this.quantityStock = 0;
         this.reservedStock = 0;
     }
 
-    public StockItem(String name, double price, int quantityStock) {
+    public Item(String name, double price, int quantityStock) {
         this.name = name;
         this.price = price;
         this.quantityStock = quantityStock;
@@ -60,7 +60,6 @@ public class StockItem implements Comparable<StockItem> {
 
     @Override
     public boolean equals(Object obj) {
-        System.out.println("Entering StockItem.equals");
         if(obj == this) {
             return true;
         }
@@ -69,7 +68,7 @@ public class StockItem implements Comparable<StockItem> {
             return false;
         }
 
-        String objName = ((StockItem) obj).getName();
+        String objName = ((Item) obj).getName();
         return this.name.equals(objName);
     }
 
@@ -79,8 +78,7 @@ public class StockItem implements Comparable<StockItem> {
     }
 
     @Override
-    public int compareTo(StockItem o) {
-        System.out.println("Entering StockItem.compareTo");
+    public int compareTo(Item o) {
         if(this == o) {
             return 0;
         }

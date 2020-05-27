@@ -4,26 +4,30 @@ import java.util.TreeMap;
 
 public class Basket {
     private final String name;
-    private final Map<StockItem, Integer> listOfItemsInBasket;
+    private final Map<Item, Integer> listOfItemsInBasket;
 
     public Basket(String name) {
         this.name = name;
         this.listOfItemsInBasket = new TreeMap<>();
     }
 
-    public int addToBasket(StockItem item, int quantity) {
+    public String getName() {
+        return name;
+    }
+
+    public int addToBasket(Item item, int quantity) {
         if ((item != null) && (quantity > 0)) {
             if(item.quantityInStock() >= quantity) {
                 int inBasket = listOfItemsInBasket.getOrDefault(item, 0);
                 item.adjustReservedStock(quantity);
                 listOfItemsInBasket.put(item, inBasket + quantity);
-                return inBasket;
+                return inBasket + quantity;
             }
         }
         return 0;
     }
 
-    public int removeFromBasket(StockItem item, int quantity) {
+    public int removeFromBasket(Item item, int quantity) {
         if((item != null) && listOfItemsInBasket.containsKey(item)) {
             if((quantity > 0) && (quantity <= listOfItemsInBasket.get(item).intValue())) {
                 int inBasket = listOfItemsInBasket.get(item) - quantity;
@@ -57,19 +61,12 @@ public class Basket {
         //RETURN 0
 
 
-
-
-
-    //como se tiene que comportar el metodo? que tiene que devolver? side effects?
-        //item is null: no pasa nada. return 0
-        //item is not in the basket: no pasa nada. return 0
-        //item is in the basket and quantity is negative: no pasa nada. return la cantidad de ese item que queda en la cesta
-        //item is in the basket and quantity is 0: no pasa nada. return la cantidad de ese item que queda en la cesta
-        //item is in the basket and quantity > number of this item in basket: no pasa nada. return la cantidad de ese item que queda en la cesta
-
-
-
-
+    //how does the method behave? what does it have to return? side effects?
+        //item is null: nothing happens. return 0
+        //item is not in the basket: nothing happens. return 0
+        //item is in the basket and quantity is negative: nothing happens. return the quantity of that item in the basket
+        //item is in the basket and quantity is 0: nothing happens. return the quantity of that item in the basket
+        //item is in the basket and quantity > number of this item in basket: nothing happens. return the quantity of that item in the basket
  */
 
 //    public int removeFromBasket(StockItem item, int quantity) {
@@ -83,19 +80,26 @@ public class Basket {
 //    }
 
 
-    public Map<StockItem, Integer> items() {
+    public Map<Item, Integer> items() {
         return Collections.unmodifiableMap(listOfItemsInBasket);
     }
 
-    public Map<StockItem, Integer> getListOfItemsInBasket() {
-        return listOfItemsInBasket;
+//    public Map<StockItem, Integer> getListOfItemsInBasket() {
+//        return listOfItemsInBasket; THIS IS WRONG. BETTER NOT TO RETURN A MAP but an unmodifiable map
+//    }
+
+    public void clearBasket() {
+        for(Map.Entry<Item, Integer> item : listOfItemsInBasket.entrySet()) {
+            item.getKey().adjustReservedStock(-item.getValue());
+        }
+        listOfItemsInBasket.clear();
     }
 
     @Override
     public String toString() {
         String s = "\nShopping basket " + name + " contains " + listOfItemsInBasket.size() + ((listOfItemsInBasket.size() == 1) ? " item" : " items") + "\n";
         double totalCost = 0.0;
-        for (Map.Entry<StockItem, Integer> item : listOfItemsInBasket.entrySet()) {
+        for (Map.Entry<Item, Integer> item : listOfItemsInBasket.entrySet()) {
             s = s + item.getKey() + ". " + item.getValue() + " purchased\n";
             totalCost += item.getKey().getPrice() * item.getValue();
         }
